@@ -1,7 +1,7 @@
 // Global elements
 var iconElement = document.querySelector(".icon");
 var notificationElement = document.querySelector(".notification");
-var tempuratureElement = document.querySelector(".temperature p");
+var temperatureElement = document.querySelector(".temp p");
 var descriptionElement = document.querySelector(".description p");
 var locationElement = document.querySelector(".location p");
 
@@ -44,13 +44,13 @@ function showError(error){
 function renderWeather(latitude, longitude){
     let apiURL = `http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}`;
     
-    fetch(apiKey)
+    fetch(apiURL)
         .then(function(response){
             let data = response.json();
             return data;
         })
         .then(function(data){
-            weather.temperature.value = Math.floor(data.main.temp - KELVIN);
+            weather.temperature.value = Math.floor(data.main.temp - tempKelvin);
             weather.description = data.weather[0].description;
             weather.iconId = data.weather[0].icon;
             weather.city = data.name;
@@ -63,8 +63,8 @@ function renderWeather(latitude, longitude){
 
 // Display weather info on browser
 function displayWeather(){
-    iconElement.innerHTML = `<img src="icons/${weather.iconId}.png"/>`;
-    tempuratureElement.innerHTML = `${weather.temperature.value}°<span>C</span>`;
+    // iconElement.innerHTML = `<img src="icons/${weather.iconId}.png"/>`;
+    temperatureElement.innerHTML = `${weather.temperature.value}°<span>C</span>`;
     descriptionElement.innerHTML = weather.description;
     locationElement.innerHTML = `${weather.city}, ${weather.country}`;
 }
@@ -75,17 +75,17 @@ function celsiusToFahrenheit(temperature){
 }
 
 // When user clicks on temp (for temp conversion):
-tempuratureElement.addEventListener("click", function(){
+temperatureElement.addEventListener("click", function(){
     if(weather.temperature.value === undefined) return;
     
     if(weather.temperature.unit == "celsius"){
         let fahrenheit = celsiusToFahrenheit(weather.temperature.value);
         fahrenheit = Math.floor(fahrenheit);
         
-        tempuratureElement.innerHTML = `${fahrenheit}°<span>F</span>`;
+        temperatureElement.innerHTML = `${fahrenheit}°<span>F</span>`;
         weather.temperature.unit = "fahrenheit";
     }else{
-        tempuratureElement.innerHTML = `${weather.temperature.value}°<span>C</span>`;
+        temperatureElement.innerHTML = `${weather.temperature.value}°<span>C</span>`;
         weather.temperature.unit = "celsius"
     }
 });
